@@ -6,8 +6,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.customerReward.application.contoller.CustomerContoller;
 import com.customerReward.application.dto.RewardDetailsDTO;
 import com.customerReward.application.entity.Customer;
 import com.customerReward.application.service.CustomerServiceImpl;
@@ -20,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.*;
 
-@WebMvcTest(CustomerContoller.class)
+@WebMvcTest(CustomerController.class)
 public class CustomerControllerTest {
 
 	@Autowired
@@ -70,28 +68,28 @@ public class CustomerControllerTest {
 	}
 
 	@Test
-	public void testGetCustomerRewardDetails_WithDefaultParam() throws Exception {
+	public void testGetAllCustomerRewardDetails_WithDefaultParam() throws Exception {
 		List<RewardDetailsDTO> rewards = new ArrayList<>();
 		RewardDetailsDTO dto = new RewardDetailsDTO();
 		dto.setCustomerId(1);
 		dto.setTotalRewardPoints(150);
 		rewards.add(dto);
 
-		when(customerService.getCustomerRewardDetails(3)).thenReturn(rewards);
+		when(customerService.getAllCustomerRewardDetails(3)).thenReturn(rewards);
 
 		mockMvc.perform(get("/customers/reward").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("150")));
 	}
 
 	@Test
-	public void testGetCustomerRewardDetails_WithCustomParam() throws Exception {
+	public void testGetAllCustomerRewardDetails_WithCustomParam() throws Exception {
 		List<RewardDetailsDTO> rewards = new ArrayList<>();
 		RewardDetailsDTO dto = new RewardDetailsDTO();
 		dto.setCustomerId(1);
 		dto.setTotalRewardPoints(200);
 		rewards.add(dto);
 
-		when(customerService.getCustomerRewardDetails(6)).thenReturn(rewards);
+		when(customerService.getAllCustomerRewardDetails(6)).thenReturn(rewards);
 
 		mockMvc.perform(get("/customers/reward").param("lastNMonths", "6").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("200")));

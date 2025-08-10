@@ -49,7 +49,7 @@ public class CustomerServiceImplTest {
 	void testGetByCustomerId_Found() {
 		Customer customer = new Customer(2, "Sankar", "sankar@gmail.com", null);
 
-		when(customerRepo.findById((long) 2)).thenReturn(Optional.of(customer));
+		when(customerRepo.findById((long)2)).thenReturn(Optional.of(customer));
 
 		Optional<Customer> result = customerService.getByCustomerId((long) 2);
 

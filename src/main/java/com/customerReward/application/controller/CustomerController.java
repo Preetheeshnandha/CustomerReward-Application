@@ -1,4 +1,4 @@
-package com.customerReward.application.contoller;
+package com.customerReward.application.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +16,11 @@ import com.customerReward.application.entity.Customer;
 
 @RestController
 @RequestMapping("customers")
-public class CustomerContoller {
+public class CustomerController {
 
 	private CustomerServiceImpl customerService;
 
-	public CustomerContoller(CustomerServiceImpl customerService) {
+	public CustomerController(CustomerServiceImpl customerService) {
 		this.customerService = customerService;
 	}
 
@@ -34,11 +34,17 @@ public class CustomerContoller {
 		return customerService.getByCustomerId(customerId).map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
+	
+	@GetMapping("/reward/{customerId}")
+	public ResponseEntity<RewardDetailsDTO> getCustomerRewardDetails(@PathVariable Long customerId,
+			@RequestParam(required = false, defaultValue = "3") int lastNMonths) {
+		return ResponseEntity.ok(customerService.getCustomerRewardDetails(customerId,lastNMonths));
+	}
 
 	@GetMapping("/reward")
-	public ResponseEntity<List<RewardDetailsDTO>> getCustomerRewardDetails(
+	public ResponseEntity<List<RewardDetailsDTO>> getAllCustomerRewardDetails(
 			@RequestParam(required = false, defaultValue = "3") int lastNMonths) {
-		return ResponseEntity.ok(customerService.getCustomerRewardDetails(lastNMonths));
+		return ResponseEntity.ok(customerService.getAllCustomerRewardDetails(lastNMonths));
 	}
 
 }

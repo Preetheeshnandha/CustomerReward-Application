@@ -10,7 +10,8 @@ public interface CustomerService {
 	
 	List<Customer> getAllCustomer();
 	Optional<Customer> getByCustomerId(Long customerId);
-	List<RewardDetailsDTO> getCustomerRewardDetails(int LastNMonths);
+	RewardDetailsDTO getCustomerRewardDetails(Long customerId,int lastNMonths);
+	List<RewardDetailsDTO> getAllCustomerRewardDetails(int LastNMonths);
 	List<String> getLastNMonths(int n);
 	
 }

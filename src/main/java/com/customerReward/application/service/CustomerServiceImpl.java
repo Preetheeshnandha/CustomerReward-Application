@@ -1,12 +1,10 @@
 package com.customerReward.application.service;
 
 import com.customerReward.application.repository.CustomerRepository;
-
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.customerReward.application.dto.RewardDetailsDTO;
 import com.customerReward.application.entity.Customer;
@@ -29,63 +27,75 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepo.findById(customerId);
 	}
 
-	public List<RewardDetailsDTO> getCustomerRewardDetails(int LastNMonths) {
+	public RewardDetailsDTO getCustomerRewardDetails(Long customerId, int lastNMonths) {
 
-		List<String> lastNMonths = getLastNMonths(LastNMonths);
+		Optional<Customer> customerObject = getByCustomerId(customerId);
+		if (customerObject.isPresent()) {
+			List<Customer> customer = Collections.singletonList(customerObject.get());
+			List<RewardDetailsDTO> customerRewardDetails = new ArrayList<>();
+			populateCustomerRewardDetails(lastNMonths, customer, customerRewardDetails);
+			return customerRewardDetails.get(0);
+		}
+		return null;
+	}
 
-		Map<Long, List<Customer>> groupingCustomers = customerRepo.findAll().stream()
-				.collect(Collectors.groupingBy(Customer::getCustomerId));
+	public List<RewardDetailsDTO> getAllCustomerRewardDetails(int lastNMonths) {
 
+		List<Customer> allCustomer = getAllCustomer();
 		List<RewardDetailsDTO> customerRewardDetails = new ArrayList<>();
 
-		groupingCustomers.forEach((groupCustomerId, customerList) -> {
-
-			customerList.forEach(customerDetails -> {
-
-				Map<String, Integer> monthlyTransactionAmount = new HashMap<>();
-				Map<String, Integer> monthlyRewards = new HashMap<>();
-
-				int totalRewardPointsPerCustomer = 0;
-
-				if (customerDetails.getTransactions() != null) {
-					for (Transaction transaction : customerDetails.getTransactions()) {
-
-						String month = transaction.getTransactionDate().getMonth().toString();
-
-						if (!lastNMonths.contains(month))
-							continue;
-
-						int transactionAmount = (int) transaction.getTransactionAmount();
-
-						int rewardPoints = calculateRewardPoints(transactionAmount);
-
-						monthlyTransactionAmount.merge(month, transactionAmount, (a, b) -> a + b);
-						monthlyRewards.merge(month, rewardPoints, (a, b) -> a + b);
-						totalRewardPointsPerCustomer += rewardPoints;
-
-					}
-				}
-
-				RewardDetailsDTO rewardDetailsDTO = RewardDetailsDTO.builder()
-						.customerId(customerDetails.getCustomerId()).customerName(customerDetails.getCustomerName())
-						.customerEmail(customerDetails.getCustomerEmail())
-						.monthlyTransactionAmount(monthlyTransactionAmount).monthlyRewards(monthlyRewards)
-						.totalRewardPoints(totalRewardPointsPerCustomer).build();
-
-				customerRewardDetails.add(rewardDetailsDTO);
-			});
-		});
+		populateCustomerRewardDetails(lastNMonths, allCustomer, customerRewardDetails);
 
 		return customerRewardDetails;
+	}
+
+	private void populateCustomerRewardDetails(int lastNMonths, List<Customer> allCustomer,
+			List<RewardDetailsDTO> customerRewardDetails) {
+
+		List<String> lastNMonthList = getLastNMonths(lastNMonths);
+		allCustomer.forEach(customerDetails -> {
+
+			Map<String, Integer> monthlyTransactionAmount = new HashMap<>();
+			Map<String, Integer> monthlyRewards = new HashMap<>();
+
+			int totalRewardPointsPerCustomer = 0;
+
+			if (customerDetails.getTransactions() != null) {
+				for (Transaction transaction : customerDetails.getTransactions()) {
+
+					String month = transaction.getTransactionDate().getMonth().toString();
+					int year = transaction.getTransactionDate().getYear();
+					if (!lastNMonthList.contains(month+"-"+year))
+						continue;
+
+					int transactionAmount = (int) transaction.getTransactionAmount();
+
+					int rewardPoints = calculateRewardPoints(transactionAmount);
+
+					monthlyTransactionAmount.merge(month, transactionAmount, (a, b) -> a + b);
+					monthlyRewards.merge(month, rewardPoints, (a, b) -> a + b);
+					totalRewardPointsPerCustomer += rewardPoints;
+
+				}
+			}
+
+			RewardDetailsDTO rewardDetailsDTO = RewardDetailsDTO.builder().customerId(customerDetails.getCustomerId())
+					.customerName(customerDetails.getCustomerName()).customerEmail(customerDetails.getCustomerEmail())
+					.monthlyTransactionAmount(monthlyTransactionAmount).monthlyRewards(monthlyRewards)
+					.totalRewardPoints(totalRewardPointsPerCustomer).build();
+
+			customerRewardDetails.add(rewardDetailsDTO);
+		});
 	}
 
 	public List<String> getLastNMonths(int n) {
 		List<String> monthNames = new ArrayList<>();
 		LocalDate currentMonth = LocalDate.now();
-
+		
 		for (int i = 1; i <= n; i++) {
 			String month = currentMonth.minusMonths(i).getMonth().toString();
-			monthNames.add(month);
+			int year = currentMonth.minusMonths(i).getYear();
+			monthNames.add(month+"-"+year);
 		}
 
 		return monthNames;
