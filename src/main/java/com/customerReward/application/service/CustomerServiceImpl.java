@@ -2,7 +2,6 @@ package com.customerReward.application.service;
 
 import com.customerReward.application.repository.CustomerRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -65,15 +64,9 @@ public class CustomerServiceImpl implements CustomerService{
 						
 						int transactionAmount = (int)transaction.getTransactionAmount();
 						
+					
+						int rewardPoints = calculateRewardPoints(transactionAmount);
 						
-						int rewardPoints = 0;
-						if(transactionAmount>100){
-							rewardPoints=(transactionAmount-100)*2+50;
-						}else if(transactionAmount<=100) {
-							rewardPoints=(transactionAmount-50);
-						}else {
-							rewardPoints=0;
-						}
 						
 						
 						monthlyTransactionAmount.merge(month, transactionAmount, (a,b) -> a+b);
@@ -113,7 +106,19 @@ public class CustomerServiceImpl implements CustomerService{
 		 
 		 return monthNames;
 	}
+	
+	public int calculateRewardPoints(int transactionAmount) {
+		if(transactionAmount>100){
+			return (transactionAmount-100)*2+50;
+		}else if(transactionAmount>50) {
+			return transactionAmount-50;
+		}else {
+			return 0;
+		}
 
+	}
+	
+	
 
 				
 }			
