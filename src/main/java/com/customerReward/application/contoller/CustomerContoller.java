@@ -12,41 +12,33 @@ import com.customerReward.application.service.CustomerServiceImpl;
 import java.util.*;
 
 import com.customerReward.application.dto.RewardDetailsDTO;
-import com.customerReward.application.entity.Customer; 
-
+import com.customerReward.application.entity.Customer;
 
 @RestController
 @RequestMapping("customers")
 public class CustomerContoller {
 
-	
-	
-	
 	private CustomerServiceImpl customerService;
-	
-	 
-	
+
 	public CustomerContoller(CustomerServiceImpl customerService) {
-		this.customerService=customerService;
+		this.customerService = customerService;
 	}
-	
-	
+
 	@GetMapping
-	public ResponseEntity<List<Customer>> getAllCustomer(){
+	public ResponseEntity<List<Customer>> getAllCustomer() {
 		return ResponseEntity.ok(customerService.getAllCustomer());
 	}
-	
+
 	@GetMapping("/{customerId}")
-	public ResponseEntity<Customer> getByCustomerId(@PathVariable Long customerId){
-		return customerService.getByCustomerId(customerId)
-				.map(ResponseEntity::ok)
+	public ResponseEntity<Customer> getByCustomerId(@PathVariable Long customerId) {
+		return customerService.getByCustomerId(customerId).map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
-	
-	
+
 	@GetMapping("/reward")
-	public  ResponseEntity<List<RewardDetailsDTO>> getCustomerRewardDetails(@RequestParam(required=false, defaultValue="3") int lastNMonths){
+	public ResponseEntity<List<RewardDetailsDTO>> getCustomerRewardDetails(
+			@RequestParam(required = false, defaultValue = "3") int lastNMonths) {
 		return ResponseEntity.ok(customerService.getCustomerRewardDetails(lastNMonths));
 	}
-	
+
 }
