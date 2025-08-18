@@ -34,7 +34,9 @@ public class CustomerServiceImpl implements CustomerService {
 		if (customerId == null || customerId <= 0) {
 	        throw new InvalidRequestException("customerId must be greater than 0");
 	    }
-		
+		if(customerRepo.findById(customerId).isEmpty()) {
+			throw new ResourceNotFoundException("Customer details not found");
+		}
 		
 		return customerRepo.findById(customerId);
 	}
