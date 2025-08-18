@@ -11,9 +11,10 @@ The logic used in the application for reward calculation is
 - Java 17
 - Springboot version 3.4.8
 - H2 Database(Sample data in data.sql file)
-- JUnit 5  and Mockito for unit test
+- JUnit 5  and Mockito for unit test.
 
-**Project Structure**
+```
+##Project Structure
 
 CustomerReward-Application/
 │── src/main/java/com/customerReward/application/
@@ -46,7 +47,7 @@ CustomerReward-Application/
 │ └── CustomerControllerTest.java # Unit tests for Controller layer
 │
 └── pom.xml # Maven dependencies & project configuration
-
+```
 
 **Design Details**
 
