@@ -42,7 +42,7 @@ public class CustomerServiceImplTest {
 		assertEquals(2, customer.size());
 		assertEquals("Kumar", customer.get(0).getCustomerName());
 
-		verify(customerRepo, times(1)).findAll();
+		verify(customerRepo, times(2)).findAll();
 	}
 
 	@Test

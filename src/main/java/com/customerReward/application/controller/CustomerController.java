@@ -14,6 +14,7 @@ import java.util.*;
 import com.customerReward.application.dto.RewardDetailsDTO;
 import com.customerReward.application.entity.Customer;
 
+
 @RestController
 @RequestMapping("customers")
 public class CustomerController {
@@ -38,6 +39,7 @@ public class CustomerController {
 	@GetMapping("/reward/{customerId}")
 	public ResponseEntity<RewardDetailsDTO> getCustomerRewardDetails(@PathVariable Long customerId,
 			@RequestParam(required = false, defaultValue = "3") int lastNMonths) {
+		
 		return ResponseEntity.ok(customerService.getCustomerRewardDetails(customerId,lastNMonths));
 	}
 
