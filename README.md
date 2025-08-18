@@ -37,7 +37,7 @@ CustomerReward-Application/
 │ │ └── InvalidRequestException.java # Custom exception for invalid parameters (400)
 │
 │── src/main/resources/
-│ ├── Evidance/ # Folder for screenshots, API responses, etc.
+│ ├── Evidance/ # Folder for screenshots API responses.
 │ ├── application.properties # Spring Boot application configuration
 │ ├── data.sql # Sample data to load into DB on startup
 │ └── schema.sql # Schema definition for tables
@@ -69,24 +69,26 @@ Implemented **GlobalExceptionHandler** using @RestControllerAdvice
   - Customer Id 1000 is not found
   
   Error Response
-  
+
+``` 
   {
     "error": "Resource Not Found",
     "message": "Customer details not found"
   }
-
+```
   
   • InvalidRequestException (400)
   GET /customers/reward/1?lastNMonths=0
   - lastNMonths must be greater than 0
   
   Error Response
-  
+
+```  
   {
     "error": "Invalid Request Parameter",
     "message": "lastNMonths must be greater than 0"
   }
-  
+```  
   
   • Generic Exception (500 - Internal Server Error)
   GET /cusmers/1
@@ -94,12 +96,12 @@ Implemented **GlobalExceptionHandler** using @RestControllerAdvice
   - It will handle other than InvalidRequestException and ResourceNotFoundException.
   
   Error Response
-  
+```  
   {
     "error": "Internal Server Error",
     "message": "Something went wrong, please check the endpoint."
   }
-  
+```  
   
 - Ensured consistent JSON error response structure across all APIs
 - Improved error messages for invalid parameters and missing resources.
@@ -124,6 +126,7 @@ GET /customers/reward/2?lastNMonths=1
 
 Response
 
+```
 {
     "customerId": 2,
     "customerName": "Ram",
@@ -132,6 +135,7 @@ Response
     "monthlyRewards": {},
     "totalRewardPoints": 0
 }
+```
 
 2. Get all Customers()
 
@@ -141,6 +145,7 @@ GET /customers
 
 Response
 
+```
 [
     {
         "customerId": 1,
@@ -196,6 +201,8 @@ Response
     }
     }
 ]
+```
+
 
 3. Get all Customer reward details
 
@@ -205,6 +212,7 @@ GET /customers/reward
 
 Response
 
+```
 [
     {
         "customerId": 1,
@@ -305,7 +313,7 @@ Response
         "totalRewardPoints": 1050
     }
 ]
-
+```
 
 4. Get the all customer reward points with last N months
 
@@ -316,6 +324,7 @@ GET /customers/reward?lastNMonths=1
 
 Response
 
+```
 [
     {
         "customerId": 1,
@@ -354,6 +363,7 @@ Response
         "totalRewardPoints": 0
     }
 ]
+```
 
 5. Get the customer data by Id
 
@@ -364,6 +374,7 @@ GET /customers/2
 
 Response
 
+```
 {
     "customerId": 2,
     "customerName": "Ram",
@@ -379,5 +390,5 @@ Response
             "transactionDate": "2025-06-25",
             "transactionAmount": 1000
         }
-    ]
 }
+```
