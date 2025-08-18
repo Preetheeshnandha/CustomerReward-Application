@@ -8,10 +8,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.customerReward.application.repository.CustomerRepository;
 import com.customerReward.application.entity.Customer;
+import com.customerReward.application.exception.ResourceNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -55,17 +57,20 @@ public class CustomerServiceImplTest {
 
 		assertTrue(result.isPresent());
 		assertEquals("Sankar", result.get().getCustomerName());
-		verify(customerRepo).findById((long) 2);
+		verify(customerRepo,times(2)).findById((long) 2);
 	}
 
 	@Test
 	void testGetByCustomerId_NotFound() {
-		when(customerRepo.findById((long) 10)).thenReturn(Optional.empty());
+		when(customerRepo.findById((long) 20)).thenReturn(Optional.empty());
 
-		Optional<Customer> result = customerService.getByCustomerId((long) 10);
-
-		assertFalse(result.isPresent());
-		verify(customerRepo).findById((long) 10);
+		ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class, () -> {
+			customerService.getByCustomerId((long)20);
+		});
+		
+		assertEquals("Customer details not found", resourceNotFoundException.getMessage());
+		
+		verify(customerRepo, times(1)).findById((long)20);
 	}
 
 	@Test
