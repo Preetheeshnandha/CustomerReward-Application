@@ -32,6 +32,9 @@ insert into transactions(transaction_date,transaction_amount,customer_id)
 values ('2025-07-12',100,1);
 
 insert into transactions(transaction_date,transaction_amount,customer_id)
+values ('2025-06-05',300,1);
+
+insert into transactions(transaction_date,transaction_amount,customer_id)
 values ('2025-06-14',150,2);
 
 insert into transactions(transaction_date,transaction_amount,customer_id)
