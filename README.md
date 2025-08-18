@@ -396,6 +396,6 @@ Response
 
 ## Evidence
 
-Here is a proof of test run:
+Proof of test run:
 
 ![Test Evidence](src/main/resources/evidence/)
