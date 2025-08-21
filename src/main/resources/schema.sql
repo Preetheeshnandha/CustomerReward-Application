@@ -9,7 +9,7 @@ CREATE TABLE customers (
 CREATE TABLE transactions (
     transaction_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     transaction_date DATE,
-    transaction_amount INT,
+    transaction_amount BIGINT,
     customer_id BIGINT NOT NULL,
     CONSTRAINT fk_transaction_customer FOREIGN KEY (customer_id)
     REFERENCES customers(customer_id)   

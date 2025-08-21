@@ -51,13 +51,13 @@ public class CustomerServiceImplTest {
 	void testGetByCustomerId_Found() {
 		Customer customer = new Customer(2, "Sankar", "sankar@gmail.com", null);
 
-		when(customerRepo.findById((long)2)).thenReturn(Optional.of(customer));
+		when(customerRepo.findById((long) 2)).thenReturn(Optional.of(customer));
 
 		Optional<Customer> result = customerService.getByCustomerId((long) 2);
 
 		assertTrue(result.isPresent());
 		assertEquals("Sankar", result.get().getCustomerName());
-		verify(customerRepo,times(2)).findById((long) 2);
+		verify(customerRepo, times(2)).findById((long) 2);
 	}
 
 	@Test
@@ -65,33 +65,60 @@ public class CustomerServiceImplTest {
 		when(customerRepo.findById((long) 20)).thenReturn(Optional.empty());
 
 		ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class, () -> {
-			customerService.getByCustomerId((long)20);
+			customerService.getByCustomerId((long) 20);
 		});
-		
+
 		assertEquals("Customer details not found", resourceNotFoundException.getMessage());
-		
-		verify(customerRepo, times(1)).findById((long)20);
+
+		verify(customerRepo, times(1)).findById((long) 20);
 	}
 
+	// Test for Calculate Reward Points 0
 	@Test
-	void testCalculateRewardPointsAbove100() {
+	void testCalculateRewardPoints0() {
 
-		int rewardPoints = customerService.calculateRewardPoints(120);
-		assertEquals(90, rewardPoints);
+		long rewardPoints = customerService.calculateRewardPoints((long)0);
+		assertEquals(0, rewardPoints);
 	}
 
+	// Test for Calculate Reward Points 50
+	@Test
+	void testCalculateRewardPoints50() {
+
+		long rewardPoints = customerService.calculateRewardPoints(50);
+		assertEquals(0, rewardPoints);
+	}
+
+	// Test for Calculate Reward Points 100
+	@Test
+	void testCalculateRewardPoints100() {
+
+		long rewardPoints = customerService.calculateRewardPoints(100);
+		assertEquals(50, rewardPoints);
+	}
+
+	// Test Calculate Reward Points Between 0 to 50
+	@Test
+	void testCalculateRewardPoints0To50() {
+
+		long rewardPoints = customerService.calculateRewardPoints(40);
+		assertEquals(0, rewardPoints);
+	}
+
+	// Test for Calculate Reward Points Between 50 To 100
 	@Test
 	void testCalculateRewardPointsBetween50To100() {
 
-		int rewardPoints = customerService.calculateRewardPoints(60);
+		long rewardPoints = customerService.calculateRewardPoints(60);
 		assertEquals(10, rewardPoints);
 	}
 
+	// Test for Calculate Reward Points Above 100
 	@Test
-	void testCalculateRewardPointsBelow50() {
+	void testCalculateRewardPointsAbove100() {
 
-		int rewardPoints = customerService.calculateRewardPoints(40);
-		assertEquals(0, rewardPoints);
+		long rewardPoints = customerService.calculateRewardPoints(120);
+		assertEquals(90, rewardPoints);
 	}
 
 }

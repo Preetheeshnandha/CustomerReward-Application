@@ -51,9 +51,9 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new InvalidRequestException("lastNMonths must be greater than 0");
 		}
 		
-		Customer customerIdException = customerRepo.findById(customerId)
-				            .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: "+customerId));
-		
+//		Customer customerIdException = customerRepo.findById(customerId)
+//				            .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: "+customerId));
+//		
 		Optional<Customer> customerObject = getByCustomerId(customerId);
 		if (customerObject.isPresent()) {
 			List<Customer> customer = Collections.singletonList(customerObject.get());
@@ -80,10 +80,10 @@ public class CustomerServiceImpl implements CustomerService {
 		List<String> lastNMonthList = getLastNMonths(lastNMonths);
 		allCustomer.forEach(customerDetails -> {
 
-			Map<String, Integer> monthlyTransactionAmount = new HashMap<>();
-			Map<String, Integer> monthlyRewards = new HashMap<>();
+			Map<String, Long> monthlyTransactionAmount = new HashMap<>();
+			Map<String, Long> monthlyRewards = new HashMap<>();
 
-			int totalRewardPointsPerCustomer = 0;
+			long totalRewardPointsPerCustomer = 0;
 
 			if (customerDetails.getTransactions() != null) {
 				for (Transaction transaction : customerDetails.getTransactions()) {
@@ -93,9 +93,9 @@ public class CustomerServiceImpl implements CustomerService {
 					if (!lastNMonthList.contains(month+"-"+year))
 						continue;
 
-					int transactionAmount = (int) transaction.getTransactionAmount();
+					Long transactionAmount = transaction.getTransactionAmount();
 
-					int rewardPoints = calculateRewardPoints(transactionAmount);
+					Long rewardPoints = calculateRewardPoints(transactionAmount);
 
 					monthlyTransactionAmount.merge(month, transactionAmount, (a, b) -> a + b);
 					monthlyRewards.merge(month, rewardPoints, (a, b) -> a + b);
@@ -126,13 +126,13 @@ public class CustomerServiceImpl implements CustomerService {
 		return monthNames;
 	}
 
-	public int calculateRewardPoints(int transactionAmount) {
+	public long calculateRewardPoints(long transactionAmount) {
 		if (transactionAmount > 100) {
 			return (transactionAmount - 100) * 2 + 50;
 		} else if (transactionAmount > 50) {
 			return transactionAmount - 50;
 		} else {
-			return 0;
+			return (long)0;
 		}
 
 	}

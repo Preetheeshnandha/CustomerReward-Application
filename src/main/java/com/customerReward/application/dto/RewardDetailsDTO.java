@@ -14,8 +14,8 @@ public class RewardDetailsDTO {
 	private long customerId;
 	private String customerName;
 	private String customerEmail;
-	private Map<String, Integer> monthlyTransactionAmount;
-	private Map<String, Integer> monthlyRewards;
-	private int totalRewardPoints;
+	private Map<String, Long> monthlyTransactionAmount;
+	private Map<String, Long> monthlyRewards;
+	private long totalRewardPoints;
 
 }
