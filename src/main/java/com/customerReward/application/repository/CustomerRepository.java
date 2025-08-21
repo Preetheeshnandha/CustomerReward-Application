@@ -5,6 +5,16 @@ import org.springframework.stereotype.Repository;
 
 import com.customerReward.application.entity.Customer;
 
+/**
+ * Repository interface for {@link Customer} entity.
+ * 
+ * <p>Extends {@link JpaRepository} to provide CRUD operations and
+ * database interaction capabilities for Customer entities.</p>
+ * 
+ * <p>This interface is automatically implemented by Spring Data JPA.</p>
+ * 
+ * @author Preetheeshnandha
+ */
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
