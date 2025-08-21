@@ -42,18 +42,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	public RewardDetailsDTO getCustomerRewardDetails(Long customerId, int lastNMonths) {
-        
-		if (customerId == null || customerId <= 0) {
-	        throw new InvalidRequestException("customerId must be greater than 0");
-	    }
 		
 		if(lastNMonths<=0) {
 			throw new InvalidRequestException("lastNMonths must be greater than 0");
 		}
-		
-//		Customer customerIdException = customerRepo.findById(customerId)
-//				            .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: "+customerId));
-//		
+				
 		Optional<Customer> customerObject = getByCustomerId(customerId);
 		if (customerObject.isPresent()) {
 			List<Customer> customer = Collections.singletonList(customerObject.get());
